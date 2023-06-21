@@ -18,9 +18,9 @@ export default class FileManager {
     this.rl.on("line", (input) => {
       if (input) {
         this.operationsManager
-        .handleOperation(input)
-        .catch((error) => console.log(error.message))
-        .finally(() => console.log(`You are currently in ${process.cwd()}`));
+          .handleOperation(input)
+          .catch((error) => console.log(error.message))
+          .finally(() => console.log(`You are currently in ${process.cwd()}`));
       }
     });
 
