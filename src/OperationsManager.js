@@ -1,10 +1,13 @@
-import { NavigationHandler, OSHandler } from "./OperationHandlers/index.js";
+import NavigationHandler from "./OperationHandlers/NavigationHandler.js";
+import OSHandler from "./OperationHandlers/OSHandler.js";
+import HashHandler from "./OperationHandlers/HashHandler.js";
 import { ERR_INVALID_INPUT, ERR_OPERATION_FAILED } from "./errors.js";
 
 export default class OperationsManager {
   constructor () {
     this.navigationHandler = new NavigationHandler();
     this.osHandler = new OSHandler();
+    this.hashHandler = new HashHandler();
   };
 
   async handleOperation(input) {
@@ -32,14 +35,21 @@ export default class OperationsManager {
         case "rn":
         case "cp":
         case "mv":
-        case "rm":
+        case "rm": {
+          break;
+        }
         case "os": {
           this._validateNumberOfArgs(args, 1);
           const [flag] = args;
           this.osHandler.handleFlag(flag);
           break;
         }
-        case "hash":
+        case "hash": {
+          this._validateNumberOfArgs(args, 1);
+          const [pathToFile] = args;
+          await this.hashHandler.calcHash(pathToFile);
+          break;
+        }
         case "compress":
         case "decomppress": {
           break;
