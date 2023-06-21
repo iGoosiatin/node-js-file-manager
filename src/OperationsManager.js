@@ -1,9 +1,10 @@
-import NavigationHandler from "./OperationHandlers/NavigationHandler.js";
+import { NavigationHandler, OSHandler } from "./OperationHandlers/index.js";
 import { ERR_INVALID_INPUT, ERR_OPERATION_FAILED } from "./errors.js";
 
 export default class OperationsManager {
   constructor () {
     this.navigationHandler = new NavigationHandler();
+    this.osHandler = new OSHandler();
   };
 
   async handleOperation(input) {
@@ -11,17 +12,17 @@ export default class OperationsManager {
     try {
       switch (operation) {
         case "up": {
-          this._validateArgNumber(args, 0);
+          this._validateNumberOfArgs(args, 0);
           this.navigationHandler.up();
           break;
         }
         case "ls": {
-          this._validateArgNumber(args, 0);
+          this._validateNumberOfArgs(args, 0);
           await this.navigationHandler.ls();
           break;
         }
         case "cd": {
-          this._validateArgNumber(args, 1);
+          this._validateNumberOfArgs(args, 1);
           const [targetDir] = args;
           this.navigationHandler.cd(targetDir);
           break;
@@ -32,7 +33,12 @@ export default class OperationsManager {
         case "cp":
         case "mv":
         case "rm":
-        case "os":
+        case "os": {
+          this._validateNumberOfArgs(args, 1);
+          const [flag] = args;
+          this.osHandler.handleFlag(flag);
+          break;
+        }
         case "hash":
         case "compress":
         case "decomppress": {
@@ -50,7 +56,7 @@ export default class OperationsManager {
     };
   }
 
-  _validateArgNumber(args, number) {
+  _validateNumberOfArgs(args, number) {
     if (args.length !== number) {
       throw new Error(ERR_OPERATION_FAILED);
     }
