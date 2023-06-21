@@ -9,9 +9,10 @@ export default class FileManager {
 
   start() {
     console.log(`Welcome to the File Manager, ${this.username}!`);
+    console.log(`You are currently in ${process.cwd()}`);
 
     this.rl.on("line", (line) => {
-      console.log(`My line: ${line}`);
+      console.log(`You are currently in ${process.cwd()}`);
     });
 
     process.on('exit', () => {
