@@ -1,18 +1,26 @@
-import { createInterface } from "readline/promises";
-import { EOL } from "os";
+import { createInterface } from "readline";
+import { EOL, homedir } from "os";
+import OperationsManager from "./OperationsManager.js";
 
 export default class FileManager {
   constructor(username) {
     this.username = username || "Anonymous";
     this.rl = createInterface(process.stdin);
+    this.operationsManager = new OperationsManager;
   }
 
   start() {
+    console.clear();
     console.log(`Welcome to the File Manager, ${this.username}!`);
+    process.chdir(homedir());
     console.log(`You are currently in ${process.cwd()}`);
 
-    this.rl.on("line", (line) => {
-      console.log(`You are currently in ${process.cwd()}`);
+    this.rl.on("line", (input) => {
+      if (input) {
+        this.operationsManager
+        .handleOperation(input)
+        .then(() => console.log(`You are currently in ${process.cwd()}`));
+      }
     });
 
     process.on('exit', () => {
