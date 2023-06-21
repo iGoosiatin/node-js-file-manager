@@ -1,6 +1,7 @@
 import NavigationHandler from "./OperationHandlers/NavigationHandler.js";
 import OSHandler from "./OperationHandlers/OSHandler.js";
 import HashHandler from "./OperationHandlers/HashHandler.js";
+import ArchiveHandler from "./OperationHandlers/ArchiveHandler.js";
 import { ERR_INVALID_INPUT, ERR_OPERATION_FAILED } from "./errors.js";
 
 export default class OperationsManager {
@@ -8,6 +9,7 @@ export default class OperationsManager {
     this.navigationHandler = new NavigationHandler();
     this.osHandler = new OSHandler();
     this.hashHandler = new HashHandler();
+    this.archiveHandler = new ArchiveHandler();
   };
 
   async handleOperation(input) {
@@ -51,7 +53,10 @@ export default class OperationsManager {
           break;
         }
         case "compress":
-        case "decomppress": {
+        case "decompress": {
+          this._validateNumberOfArgs(args, 2);
+          const [pathToInputFile, pathToOutputFile] = args;
+          await this.archiveHandler.archive(pathToInputFile, pathToOutputFile, operation === "decompress");
           break;
         }
         case ".exit": {
