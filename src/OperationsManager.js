@@ -3,6 +3,7 @@ import OSHandler from "./OperationHandlers/OSHandler.js";
 import HashHandler from "./OperationHandlers/HashHandler.js";
 import ArchiveHandler from "./OperationHandlers/ArchiveHandler.js";
 import { ERR_INVALID_INPUT, ERR_OPERATION_FAILED } from "./errors.js";
+import FileHandler from "./OperationHandlers/FileHandler.js";
 
 export default class OperationsManager {
   constructor () {
@@ -10,6 +11,7 @@ export default class OperationsManager {
     this.osHandler = new OSHandler();
     this.hashHandler = new HashHandler();
     this.archiveHandler = new ArchiveHandler();
+    this.fileHandler = new FileHandler();
   };
 
   async handleOperation(input) {
@@ -32,12 +34,40 @@ export default class OperationsManager {
           this.navigationHandler.cd(targetDir);
           break;
         }
-        case "cat":
-        case "add":
-        case "rn":
-        case "cp":
-        case "mv":
+        case "cat": {
+          this._validateNumberOfArgs(args, 1);
+          const [pathToFile] = args;
+          await this.fileHandler.cat(pathToFile);
+          break;
+        }
+        case "add": {
+          this._validateNumberOfArgs(args, 1);
+          const [pathToFile] = args;
+          await this.fileHandler.add(pathToFile);
+          break;
+        }
+        case "rn": {
+          this._validateNumberOfArgs(args, 2);
+          const [pathToFile, newFileName] = args;
+          await this.fileHandler.rn(pathToFile, newFileName);
+          break;
+        }
+        case "cp": {
+          this._validateNumberOfArgs(args, 2);
+          const [pathToFile, pathToDirectory] = args;
+          await this.fileHandler.cp(pathToFile, pathToDirectory);
+          break;
+        }
+        case "mv": {
+          this._validateNumberOfArgs(args, 2);
+          const [pathToFile, pathToDirectory] = args;
+          await this.fileHandler.mv(pathToFile, pathToDirectory);
+          break;
+        }
         case "rm": {
+          this._validateNumberOfArgs(args, 1);
+          const [pathToFile] = args;
+          await this.fileHandler.rm(pathToFile);
           break;
         }
         case "os": {
@@ -62,6 +92,10 @@ export default class OperationsManager {
         case ".exit": {
           process.exit();
         }
+        case ".cls": {
+          console.clear();
+          break;
+        }
         default: {
           console.log(ERR_INVALID_INPUT);
         }
@@ -73,7 +107,7 @@ export default class OperationsManager {
 
   _validateNumberOfArgs(args, number) {
     if (args.length !== number) {
-      throw new Error(ERR_OPERATION_FAILED);
+      throw new Error();
     }
   }
 }

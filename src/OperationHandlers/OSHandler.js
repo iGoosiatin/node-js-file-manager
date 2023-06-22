@@ -30,5 +30,5 @@ export default class OSHandler {
         throw new Error();
       }
     }
-  }
+  };
 }

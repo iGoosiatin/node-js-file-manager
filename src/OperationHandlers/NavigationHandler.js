@@ -25,5 +25,5 @@ export default class NavigationHandler {
     const supportHomeDir = dir.replace(/^~/, homedir());
     const targetDir = resolve(process.cwd(), supportHomeDir);
     process.chdir(targetDir);
-  }
+  };
 }
