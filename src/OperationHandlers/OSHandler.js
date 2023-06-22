@@ -1,10 +1,11 @@
 import { EOL, homedir, userInfo, cpus as getCpus, arch } from "os";
+import { ERR_INVALID_INPUT } from "../errors.js";
 
 export default class OSHandler {
   handleFlag(flag) {
     switch (flag) {
       case "--EOL": {
-        console.log(EOL);
+        console.log(JSON.stringify(EOL));
         break;
       }
       case "--cpus": {
@@ -27,7 +28,7 @@ export default class OSHandler {
         break;
       }
       default: {
-        throw new Error();
+        throw new Error(ERR_INVALID_INPUT);
       }
     }
   };
