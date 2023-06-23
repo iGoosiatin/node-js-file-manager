@@ -97,17 +97,21 @@ export default class OperationsManager {
           break;
         }
         default: {
-          console.log(ERR_INVALID_INPUT);
+          throw new Error(ERR_INVALID_INPUT);
         }
       }
-    } catch {
+    } catch (error){
+      if (error.message === ERR_INVALID_INPUT){
+        throw new Error(ERR_INVALID_INPUT);
+      };
+
       throw new Error(ERR_OPERATION_FAILED);
     };
   }
 
   _validateNumberOfArgs(args, number) {
     if (args.length !== number) {
-      throw new Error();
+      throw new Error(ERR_INVALID_INPUT);
     }
   }
 }
