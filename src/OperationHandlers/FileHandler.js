@@ -8,9 +8,9 @@ export default class FileHandler {
   cat(pathToFile) {
     return new Promise((resolve, reject) => {
       const readStream = createReadStream(pathToFile);
-      readStream.on("error", () => reject());
+      readStream.on("error", reject);
       readStream.on("data", (data) => console.log(data.toString()));
-      readStream.on("end", () => resolve());
+      readStream.on("end", resolve);
     });
   };
 
