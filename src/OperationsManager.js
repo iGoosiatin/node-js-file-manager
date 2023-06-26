@@ -15,7 +15,9 @@ export default class OperationsManager {
   };
 
   async handleOperation(input) {
-    const [operation, ...args] = input.split(" ");
+    const indexOfSpace = input.indexOf(" ");
+    const operation = indexOfSpace === -1 ? input : input.slice(0, indexOfSpace);
+    const args = indexOfSpace === -1 ? [] : this._parseArgs(input.slice(indexOfSpace).trim());
     try {
       switch (operation) {
         case "up": {
@@ -101,12 +103,33 @@ export default class OperationsManager {
         }
       }
     } catch (error){
-      if (error.message === ERR_INVALID_INPUT){
+      if (error?.message === ERR_INVALID_INPUT){
         throw new Error(ERR_INVALID_INPUT);
       };
 
       throw new Error(ERR_OPERATION_FAILED);
     };
+  }
+
+  _parseArgs(stringifiedArgs) {
+    if (stringifiedArgs.includes("\\ ")) {
+      const parsedArgs = [];
+      while (stringifiedArgs) {
+        const indexOfSpace = stringifiedArgs.search(/(?<!\\) /);
+        if (indexOfSpace === -1) {
+          // Single/last argument
+          parsedArgs.push(stringifiedArgs.replaceAll("\\ ", " "));
+          stringifiedArgs = "";
+        } else {
+          const arg = stringifiedArgs.slice(0, indexOfSpace);
+          parsedArgs.push(arg.replaceAll("\\ ", " "));
+          stringifiedArgs = stringifiedArgs.slice(indexOfSpace).trim();
+        }
+      };
+      return parsedArgs;
+    } else {
+      return stringifiedArgs.split(" ").filter(Boolean);
+    }
   }
 
   _validateNumberOfArgs(args, number) {

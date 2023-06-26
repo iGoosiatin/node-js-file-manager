@@ -16,9 +16,10 @@ export default class FileManager {
     console.log(`You are currently in ${process.cwd()}`);
 
     this.rl.on("line", (input) => {
-      if (input) {
+      const trimmedInput = input.trim();
+      if (trimmedInput) {
         this.operationsManager
-          .handleOperation(input)
+          .handleOperation(trimmedInput)
           .catch((error) => console.log(error.message))
           .finally(() => console.log(`You are currently in ${process.cwd()}`));
       }
